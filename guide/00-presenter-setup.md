@@ -2,7 +2,7 @@
 
 ## 1. Create the live demo repository
 
-Code scanning, code quality, and Dependabot alerts aren't available on this **private personal** repository (no GitHub Advanced Security). Create a separate demo repo where they work:
+Code scanning and code quality aren't available on this **private personal** repository (no GitHub Advanced Security). Dependabot alerts already work here, so you can show them from this repo too. Create a separate demo repo where they work:
 
 ```bash
 # Public demo repo (code scanning is free on public repos)

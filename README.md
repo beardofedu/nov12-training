@@ -38,7 +38,7 @@ Every slide has presenter talking points in its speaker notes. Each guide lists 
 
 ## Why a separate demo repository?
 
-This repository is private under a personal account, where GitHub Advanced Security features (code scanning, code quality) aren't available. `scripts/create-demo-repo.sh` copies `demo-app/` and the security configuration into a public repo (free code scanning) or an org repo with GitHub Code Security, so alerts are live during the session. The CodeQL workflow here only runs on manual dispatch, or automatically when the repo is public or the `CODE_SCANNING_ENABLED` variable is `true`.
+This repository is private under a personal account, where GitHub Advanced Security features (code scanning, code quality) aren't available. Dependabot alerts **do** work here — see the Security tab. `scripts/create-demo-repo.sh` copies `demo-app/` and the security configuration into a public repo (free code scanning) or an org repo with GitHub Code Security, so alerts are live during the session. The CodeQL workflow here only runs on manual dispatch, or automatically when the repo is public or the `CODE_SCANNING_ENABLED` variable is `true`.
 
 ## Work on the deck locally
 

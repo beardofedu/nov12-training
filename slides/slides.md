@@ -251,7 +251,7 @@ class: text-center
 SWITCH TO BROWSER (demo repository with code scanning enabled). About 6 minutes.
 1. Show the CodeQL workflow run in Actions.
 2. Security → Code scanning → open the "Database query built from user-controlled sources" alert.
-3. Walk the data-flow path ("Show paths") from req.query.name to db.query.
+3. Walk the data-flow path ("Show paths") from req.query.name to db.all.
 4. Click "Generate fix" (Copilot Autofix) and read the explanation aloud.
 5. Optional: open the prepared PR that introduces a new vulnerability and show the inline annotation.
 -->
