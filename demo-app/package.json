@@ -1,0 +1,16 @@
+{
+  "name": "nov12-demo-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "INTENTIONALLY INSECURE demo app for training. Do not deploy.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "4.17.1",
+    "lodash": "4.17.15",
+    "sqlite3": "5.1.6"
+  }
+}

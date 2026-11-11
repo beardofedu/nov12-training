@@ -1,0 +1,39 @@
+# CodeQL advanced setup — shown during the CodeQL section of the training.
+# Code scanning requires a public repository or GitHub Code Security on private
+# repositories. In this private training repo it runs only on manual dispatch;
+# scripts/create-demo-repo.sh copies it into a demo repo where it runs automatically.
+name: CodeQL
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '30 6 * * 1'
+
+permissions:
+  security-events: write
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    if: github.event_name == 'workflow_dispatch' || github.event.repository.private == false || vars.CODE_SCANNING_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript, python, actions]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          # security-and-quality adds maintainability/reliability queries to security results
+          queries: security-and-quality
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:${{ matrix.language }}
