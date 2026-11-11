@@ -183,7 +183,7 @@ app.get('/users', (req, res) => {
   const name = req.query.name;       // 🔴 source
   const sql =
     `SELECT * FROM users WHERE name = '${name}'`;
-  db.query(sql, ...);                // 🔴 sink
+  db.all(sql, ...);                  // 🔴 sink
 });
 ```
 
