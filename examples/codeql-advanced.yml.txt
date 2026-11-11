@@ -1,7 +1,8 @@
-# CodeQL advanced setup — shown during the CodeQL section of the training.
-# Code scanning requires a public repository or GitHub Code Security on private
-# repositories. In this private training repo it runs only on manual dispatch;
-# scripts/create-demo-repo.sh copies it into a demo repo where it runs automatically.
+# INERT REFERENCE ONLY: default setup owns live CodeQL in nov12-training.
+# Do not copy into .github/workflows/ or dispatch while default setup is enabled.
+# Default setup disables existing CodeQL workflows and rejects advanced uploads:
+# https://docs.github.com/en/code-security/reference/code-scanning/troubleshoot-analysis-errors/two-codeql-workflows
+# Switching setup modes requires a separate owner decision; not part of this demo.
 name: CodeQL
 
 on:
@@ -21,7 +22,6 @@ permissions:
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
-    if: github.event_name == 'workflow_dispatch' || github.event.repository.private == false || vars.CODE_SCANNING_ENABLED == 'true'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -32,7 +32,7 @@ jobs:
       - uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          # security-and-quality adds maintainability/reliability queries to security results
+          # This query suite is NOT the separate GitHub Code Quality product.
           queries: security-and-quality
       - uses: github/codeql-action/analyze@v3
         with:

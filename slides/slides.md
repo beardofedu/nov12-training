@@ -139,6 +139,8 @@ class: text-center
 
 Code · Issues · Pull requests · Actions · Projects · Security · Insights
 
+[Open beardofedu/nov12-training](https://github.com/beardofedu/nov12-training)
+
 <!--
 SWITCH TO BROWSER. Follow guide/01-github-overview.md (about 5 minutes).
 1. Open the training repository Code tab — point out README rendering, branches, and the .github folder.
@@ -207,7 +209,7 @@ Talking points:
 <div class="p-4 rounded bg-green-500/10">
 
 ### Default setup
-- Settings → Code security → **CodeQL analysis → Set up → Default**
+- **Active in this public training repository**
 - GitHub picks languages & queries
 - Runs on push, PR, and weekly
 - ✅ Best starting point
@@ -219,7 +221,7 @@ Talking points:
 - Commit a workflow (`.github/workflows/codeql.yml`)
 - Choose query suites (`security-extended`, `security-and-quality`)
 - Custom build steps, custom queries
-- ✅ When you need control
+- A separate alternative — **not running alongside default**
 
 </div>
 </div>
@@ -228,12 +230,16 @@ Talking points:
 
 **Copilot Autofix** proposes a fix for many alerts — review it, then commit it to a branch or PR.
 
+<div class="text-sm opacity-70">The inert advanced reference lives in <code>examples/codeql-advanced.yml.txt</code>. No setup changes during this workshop.</div>
+
 </div>
 
 <!--
 Talking points:
 - Most teams should start with default setup — it's a few clicks and needs no YAML.
-- Advanced setup is in this repo at .github/workflows/codeql.yml so people can see what it looks like.
+- Default setup is verified here, with the default query suite. The advanced example was moved outside .github/workflows so it cannot compete with the managed scan.
+- Default setup disables pre-existing CodeQL workflows and rejects advanced uploads. A historical workflow shown as active in the API isn't proof it runs.
+- Reference: https://docs.github.com/en/code-security/reference/code-scanning/troubleshoot-analysis-errors/two-codeql-workflows
 - Copilot Autofix: explains the alert and suggests a patch. A human still reviews it.
 - Licensing note: public repos get code scanning free; private/internal repos need GitHub Code Security.
 -->
@@ -247,13 +253,22 @@ class: text-center
 
 `guide/02-codeql.md`
 
+[Open SQL injection alert #5](https://github.com/beardofedu/nov12-training/security/code-scanning/5)
+· [Successful default-setup run](https://github.com/beardofedu/nov12-training/actions/runs/42951388442)
+
+<div class="mt-6 text-sm opacity-70">Source inspection only — do not start or deploy the vulnerable app.</div>
+
 <!--
-SWITCH TO BROWSER (demo repository with code scanning enabled). About 6 minutes.
-1. Show the CodeQL workflow run in Actions.
+SWITCH TO BROWSER: beardofedu/nov12-training. About 6 minutes.
+1. Show the verified successful default-setup run, not the retired advanced workflow.
 2. Security → Code scanning → open the "Database query built from user-controlled sources" alert.
 3. Walk the data-flow path ("Show paths") from req.query.name to db.all.
-4. Click "Generate fix" (Copilot Autofix) and read the explanation aloud.
-5. Optional: open the prepared PR that introduces a new vulnerability and show the inline annotation.
+4. If Generate fix is available, review its proposed parameter binding; otherwise explain a parameterized-query diff manually.
+5. Optional: open an existing prepared PR and show any actual CodeQL annotation.
+Expected: identify source, construction, sink and proposed fix in the real alert. Alert #5 was open at preflight; recheck current state.
+Keep fixes on an unmerged demo branch. Do not introduce a new flaw, dismiss findings, or change settings to reset.
+If the alert is resolved/inaccessible, explain that state and trace source instead; don't claim a fresh scan.
+RETURN TO DECK for code quality.
 -->
 
 ---
@@ -276,10 +291,11 @@ Transition: "Not every problem is a vulnerability. Some code is just hard to mai
 <div>
 
 ### GitHub Code Quality
-- Uses CodeQL **quality queries** to find reliability & maintainability issues
-- Scores repositories on **Reliability** and **Maintainability**
-- Shows findings on pull requests and in the repository's **Code quality** view
-- **Copilot Autofix** suggests fixes; assign the backlog to Copilot coding agent
+- **Enabled here** — its own product and dashboard
+- Deterministic **CodeQL quality rules** on pull requests
+- Default-branch quality debt + AI analysis of recently changed files
+- Cobertura coverage reports and ruleset thresholds, when configured
+- Review suggested fixes; delegation depends on access/policy
 
 </div>
 <div>
@@ -304,9 +320,11 @@ function applyDiscount(total, code) {
 <!--
 Talking points:
 - Security scanning asks "can this be exploited?"; quality asks "will this break or slow the team down?"
-- Findings land in the same PR experience, so developers fix them before merge.
+- PR findings use deterministic rules; Copilot AI code review is a separate product.
+- Local tests/lint and the CodeQL security-and-quality suite are not GitHub Code Quality.
 - Example code lives in demo-app/src/utils/pricing.js and demo-app/python/report.py.
-- Quality gates can be enforced with rulesets (e.g., block merges below a threshold).
+- Quality/coverage gates can be enforced with rulesets, but no uploaded coverage or enforced threshold was verified here. Separate product/AI usage costs can apply.
+- Source: https://docs.github.com/en/code-security/concepts/code-quality/code-quality
 -->
 
 ---
@@ -318,13 +336,22 @@ class: text-center
 
 `guide/03-code-quality.md`
 
+[Open the training repository](https://github.com/beardofedu/nov12-training)
+
+**Security and quality → Code quality → Standard findings**
+
+<div class="mt-6 text-sm opacity-70">Use actual results. An empty or pending dashboard is not a fabricated finding.</div>
+
 <!--
 SWITCH TO BROWSER. About 4 minutes.
-1. Open the Code quality view for the demo repository (Security & quality → Code quality).
-2. Show the Reliability / Maintainability ratings.
-3. Open the finding in pricing.js (self-comparison or unused variable).
-4. Show the suggested fix and how you'd hand it to Copilot.
-If Code Quality isn't enabled, show the same findings via the CodeQL "security-and-quality" suite results.
+1. In beardofedu/nov12-training open Security and quality → Code quality → Standard findings.
+2. Show the actual analysis status and findings/metrics displayed, not assumed ratings.
+3. If pricing.js has a finding, open it; otherwise discuss the source explicitly as a code example, not product output.
+4. Review an available suggested fix. Do not start paid agent work without approval.
+If results are empty, pending or inaccessible, use the official results guide:
+https://docs.github.com/en/code-security/how-tos/maintain-quality-code/interpret-results
+Do not substitute code-scanning results or tests as Code Quality output.
+RETURN TO DECK for the Security tab. Keep any edits on an unmerged demo branch.
 -->
 
 ---
@@ -343,14 +370,14 @@ Transition: "We've seen individual alerts. Let's look at the home for all of the
 
 # What lives in the Security tab
 
-<div class="grid grid-cols-2 gap-6">
+<div class="grid grid-cols-2 gap-6 text-sm">
 <div>
 
 | Feature | What it finds |
 | --- | --- |
-| **Code scanning** | Vulnerabilities in your code (CodeQL, AI Scan, 3rd-party SARIF) |
-| **Secret scanning** | Committed tokens, keys, passwords |
-| **Push protection** | Blocks secrets *before* they land |
+| **Code scanning** | Risks in source (CodeQL, other analyzers) |
+| **Secret scanning** | Detects supported secrets — **enabled here** |
+| **Push protection** | Can block supported secrets in a push — **disabled here** |
 | **Dependabot** | Vulnerable dependencies + update PRs |
 | **Security policy & advisories** | How to report & publish fixes |
 
@@ -368,7 +395,8 @@ Transition: "We've seen individual alerts. Let's look at the home for all of the
 <!--
 Talking points:
 - Repository Security tab = one repo. Security overview = every repo in your org.
-- Push protection is the only control here that PREVENTS rather than detects — emphasize it.
+- Secret scanning and push protection are separate settings. Here scanning is enabled, push protection disabled. Do not demonstrate a blocked push or change settings.
+- Secret scanning was empty at preflight. Never seed even a test token; explain detection and revocation without credentials.
 - Dependabot: demo-app/package.json pins old lodash/express versions on purpose to generate alerts.
 -->
 
@@ -381,13 +409,21 @@ class: text-center
 
 `guide/04-security-tab.md`
 
+[Security overview](https://github.com/beardofedu/nov12-training/security)
+· [Dependabot](https://github.com/beardofedu/nov12-training/security/dependabot)
+· [Secret scanning](https://github.com/beardofedu/nov12-training/security/secret-scanning)
+
+**Secret scanning: on · Push protection: off**
+
 <!--
 SWITCH TO BROWSER. About 6 minutes.
 1. Security tab overview → show enabled features.
-2. Dependabot → open the lodash alert, show severity, affected versions, and the security update PR.
-3. Secret scanning → explain alerts; optionally demo push protection with a TEST token from docs.
+2. Dependabot → open an actual lodash alert, show severity, affected versions, and an existing related update PR if available; check whether its jobs succeeded.
+3. Secret scanning → enabled, with no alerts at November 10 preflight. Explain supported patterns and rotation after a real leak. Push protection is disabled; do not push tokens or change settings.
 4. Code scanning → filter by severity and branch.
 5. (If org access) Security overview → coverage and risk dashboards.
+Read-only tour; do not dismiss alerts or merge updates to reset.
+RETURN TO DECK for Copilot.
 -->
 
 ---
@@ -452,13 +488,20 @@ class: text-center
 
 Explain → Fix → Test → Assign → Review
 
+[Source for alert #5](https://github.com/beardofedu/nov12-training/blob/main/demo-app/src/server.js)
+· [Repository instructions](https://github.com/beardofedu/nov12-training/blob/main/.github/copilot-instructions.md)
+
 <!--
 SWITCH TO EDITOR / BROWSER. About 8 minutes.
-1. Open demo-app/src/server.js in VS Code or Codespaces; ask Copilot Chat "/explain" on the /users route.
-2. Ask: "Fix the SQL injection using parameterized queries." Accept the diff.
-3. Ask Copilot to write a unit test for applyDiscount in pricing.js.
+Use beardofedu/nov12-training on an unmerged disposable branch. Do not start the vulnerable app.
+1. Open demo-app/src/server.js in VS Code or Codespaces; ask Copilot Chat to explain the /users route.
+2. Ask for a minimal parameterized-query fix for alert #5. Review the diff, parameter binding and error/response behavior before accepting.
+3. Ask Copilot to write node:test tests importing only pricing.js (not server.js or db.js). Run the new test file and report the actual outcome; do not install old runtime dependencies.
 4. On github.com, assign the prepared issue to Copilot coding agent; show the PR it opens (prepare one in advance).
 5. Request a Copilot code review on a PR and show comments.
+Agent/review availability depends on license and policy. If unavailable, walk the prompt/diff manually and label it as such.
+No live alert resolution is claimed before an authorized merge and subsequent default-setup scan.
+Keep changes unmerged; don't reintroduce a flaw to reset. RETURN TO DECK for Universe highlights.
 -->
 
 ---
