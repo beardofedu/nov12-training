@@ -4,7 +4,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const { exec } = require('child_process');
+const { execFile } = require('child_process');
 const _ = require('lodash');
 const db = require('./db');
 const { applyDiscount } = require('./utils/pricing');
@@ -35,7 +35,12 @@ app.get('/reports', (req, res) => {
 
 // DEMO (CodeQL): command injection — js/command-line-injection
 app.get('/ping', (req, res) => {
-  exec(`ping -c 1 ${req.query.host}`, (err, stdout) => {
+  const host = req.query.host;
+  if (typeof host !== 'string' || !/^[a-zA-Z0-9.-]+$/.test(host)) {
+    return res.status(400).send('invalid host');
+  }
+
+  execFile('ping', ['-c', '1', host], (err, stdout) => {
     res.type('text/plain').send(stdout);
   });
 });
@@ -50,4 +55,8 @@ app.get('/price', (req, res) => {
   res.json({ total: applyDiscount(Number(req.query.total), req.query.code) });
 });
 
-app.listen(3000, () => console.log('Demo app listening on :3000'));
+if (require.main === module) {
+  app.listen(3000, () => console.log('Demo app listening on :3000'));
+}
+
+module.exports = app;
