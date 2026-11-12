@@ -12,11 +12,11 @@ const { applyDiscount } = require('./utils/pricing');
 const app = express();
 app.use(express.json());
 
-// DEMO (CodeQL): SQL injection — js/sql-injection
+// CodeQL: SQL query uses a parameterized value.
 app.get('/users', (req, res) => {
   const name = req.query.name;
-  const sql = `SELECT * FROM users WHERE name = '${name}'`;
-  db.all(sql, (err, rows) => {
+  const sql = 'SELECT * FROM users WHERE name = ?';
+  db.all(sql, [name], (err, rows) => {
     if (err) return res.status(500).send('error');
     res.json(rows);
   });
