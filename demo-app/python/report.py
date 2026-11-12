@@ -26,8 +26,9 @@ def export():
     return "ok"
 
 
-def summarize(values=[]):
-    # DEMO (Code quality): mutable default argument — py/modification-of-default-value
+def summarize(values=None):
+    if values is None:
+        values = []
     values.append(0)
     total = 0
     unused_count = len(values)  # DEMO (Code quality): unused local variable
