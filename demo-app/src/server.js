@@ -36,7 +36,7 @@ app.get('/reports', (req, res) => {
 // DEMO (CodeQL): command injection — js/command-line-injection
 app.get('/ping', (req, res) => {
   const host = req.query.host;
-  if (typeof host !== 'string' || !/^[a-zA-Z0-9.-]+$/.test(host)) {
+  if (typeof host !== 'string' || (!/^[a-zA-Z0-9.-]+$/.test(host) && require('net').isIP(host) === 0)) {
     return res.status(400).send('invalid host');
   }
 
